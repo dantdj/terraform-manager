@@ -8,8 +8,8 @@ import (
 var Configuration Config
 
 type Config struct {
-	TerraformVersions TerraformVersionConfig `json:"terraformVersions"`
-	CurrentVersion    string                 `json:"currentVersion"`
+	TerraformVersions []TerraformVersionConfig `json:"terraformVersions"`
+	CurrentVersion    string                   `json:"currentVersion"`
 }
 
 type TerraformVersionConfig struct {
@@ -18,7 +18,7 @@ type TerraformVersionConfig struct {
 }
 
 func Load() {
-	data, err := ioutil.ReadFile("./config/config.json")
+	data, err := ioutil.ReadFile("config.json")
 	if err != nil {
 		panic(err)
 	}

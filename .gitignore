@@ -16,6 +16,7 @@
 
 # Local development artifacts
 terraform/
+config.json
 
 # OSX Things
 *.DS_Store
