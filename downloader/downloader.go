@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 
 	"github.com/dustin/go-humanize"
@@ -30,10 +29,8 @@ func (wc *WriteCounter) PrintProgress() {
 	fmt.Printf("Downloading... %s downloaded", humanize.Bytes(wc.Total))
 }
 
-func DownloadAndUnpackZip(url string) error {
-	extractedPath := "terraform"
-	zipPath := extractedPath + ".zip"
-	out, err := os.Create(zipPath)
+func DownloadZip(url string, dest string) error {
+	out, err := os.Create(dest)
 	if err != nil {
 		return err
 	}
@@ -56,24 +53,7 @@ func DownloadAndUnpackZip(url string) error {
 
 	out.Close()
 
-	_, err = UnzipFile(zipPath, extractedPath)
-	if err != nil {
-		return err
-	}
-
-	if err := os.Rename(extractedPath+"/terraform", extractedPath+"/terraform"+ExtractVersionNumber(url)); err != nil {
-		return err
-	}
-
-	if err = os.Remove(zipPath); err != nil {
-		return err
-	}
-
 	return nil
-}
-
-func ValidateHash(fileHash, expectedHash string) bool {
-	return true
 }
 
 func UnzipFile(source, dest string) ([]string, error) {
@@ -128,9 +108,6 @@ func UnzipFile(source, dest string) ([]string, error) {
 	return filenames, nil
 }
 
-func ExtractVersionNumber(url string) string {
-	// Finds a version matching the form <major>.<minor>.<patch>
-	// e.g 1.12.3 will match
-	regex := regexp.MustCompile(`\d+(\.\d+){2}`)
-	return regex.FindString(url)
+func ValidateHash(fileHash, expectedHash string) bool {
+	return true
 }
