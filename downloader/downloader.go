@@ -56,12 +56,10 @@ func DownloadZip(url string, dest string) error {
 	return nil
 }
 
-func UnzipFile(source, dest string) ([]string, error) {
-	var filenames []string
-
+func UnzipFile(source, dest string) error {
 	reader, err := zip.OpenReader(source)
 	if err != nil {
-		return filenames, err
+		return err
 	}
 	defer reader.Close()
 
@@ -70,10 +68,8 @@ func UnzipFile(source, dest string) ([]string, error) {
 
 		// Protects against ZipSlip - https://snyk.io/research/zip-slip-vulnerability
 		if !strings.HasPrefix(destPath, filepath.Clean(dest)+string(os.PathSeparator)) {
-			return filenames, fmt.Errorf("%s: illegal file path", destPath)
+			return fmt.Errorf("%s: illegal file path", destPath)
 		}
-
-		filenames = append(filenames, destPath)
 
 		if file.FileInfo().IsDir() {
 			os.MkdirAll(destPath, os.ModePerm)
@@ -81,17 +77,17 @@ func UnzipFile(source, dest string) ([]string, error) {
 		}
 
 		if err = os.MkdirAll(filepath.Dir(destPath), os.ModePerm); err != nil {
-			return filenames, err
+			return err
 		}
 
 		outFile, err := os.OpenFile(destPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, file.Mode())
 		if err != nil {
-			return filenames, err
+			return err
 		}
 
 		rc, err := file.Open()
 		if err != nil {
-			return filenames, err
+			return err
 		}
 
 		_, err = io.Copy(outFile, rc)
@@ -101,11 +97,11 @@ func UnzipFile(source, dest string) ([]string, error) {
 		rc.Close()
 
 		if err != nil {
-			return filenames, err
+			return err
 		}
 	}
 
-	return filenames, nil
+	return nil
 }
 
 func ValidateHash(fileHash, expectedHash string) bool {

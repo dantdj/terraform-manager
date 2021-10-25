@@ -30,9 +30,7 @@ var downloadCmd = &cobra.Command{
 			return err
 		}
 
-		_, err := downloader.UnzipFile(zipDest, exeDest)
-
-		if err != nil {
+		if err := downloader.UnzipFile(zipDest, exeDest); err != nil {
 			return err
 		}
 
