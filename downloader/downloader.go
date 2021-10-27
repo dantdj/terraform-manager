@@ -2,6 +2,8 @@ package downloader
 
 import (
 	"archive/zip"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"net/http"
@@ -29,7 +31,7 @@ func (wc *WriteCounter) PrintProgress() {
 	fmt.Printf("Downloading... %s downloaded", humanize.Bytes(wc.Total))
 }
 
-func DownloadZip(url string, dest string) error {
+func DownloadFile(url string, dest string) error {
 	out, err := os.Create(dest)
 	if err != nil {
 		return err
@@ -104,6 +106,26 @@ func UnzipFile(source, dest string) error {
 	return nil
 }
 
-func ValidateHash(fileHash, expectedHash string) bool {
-	return true
+func ValidateZipHash(filepath, expectedHash string) (bool, error) {
+	hash, err := generateZipHash(filepath)
+	if err != nil {
+		return false, err
+	}
+
+	return hash == expectedHash, nil
+}
+
+func generateZipHash(filepath string) (string, error) {
+	f, err := os.Open(filepath)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+
+	hash := sha256.New()
+	if _, err := io.Copy(hash, f); err != nil {
+		return "", err
+	}
+
+	return hex.EncodeToString(hash.Sum(nil)), nil
 }
