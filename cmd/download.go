@@ -40,7 +40,7 @@ var downloadCmd = &cobra.Command{
 
 		expectedHash, _ := getExpectedHash(shaDest, zipDest)
 
-		valid, err := downloader.ValidateZipHash(zipDest, expectedHash)
+		valid, err := downloader.ValidateFileHash(zipDest, expectedHash)
 		if err != nil {
 			return err
 		}

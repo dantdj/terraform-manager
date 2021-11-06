@@ -94,7 +94,8 @@ func UnzipFile(source, dest string) error {
 
 		_, err = io.Copy(outFile, rc)
 
-		// Close the file without defer to close before next iteration of loop
+		// Close before next iteration of loop - deferring would only close at
+		// end of function
 		outFile.Close()
 		rc.Close()
 
@@ -106,8 +107,8 @@ func UnzipFile(source, dest string) error {
 	return nil
 }
 
-func ValidateZipHash(filepath, expectedHash string) (bool, error) {
-	hash, err := generateZipHash(filepath)
+func ValidateFileHash(filepath, expectedHash string) (bool, error) {
+	hash, err := generateFileHash(filepath)
 	if err != nil {
 		return false, err
 	}
@@ -115,7 +116,7 @@ func ValidateZipHash(filepath, expectedHash string) (bool, error) {
 	return hash == expectedHash, nil
 }
 
-func generateZipHash(filepath string) (string, error) {
+func generateFileHash(filepath string) (string, error) {
 	f, err := os.Open(filepath)
 	if err != nil {
 		return "", err
