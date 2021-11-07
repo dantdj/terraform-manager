@@ -38,3 +38,10 @@ func AddVersionConfig(terraformVersion, binaryLocation string) {
 	data, _ := json.MarshalIndent(Configuration, "", " ")
 	_ = ioutil.WriteFile("config.json", data, 0644)
 }
+
+func UpdateCurrentVersion(terraformVersion string) {
+	Configuration.CurrentVersion = terraformVersion
+
+	data, _ := json.MarshalIndent(Configuration, "", " ")
+	_ = ioutil.WriteFile("config.json", data, 0644)
+}
