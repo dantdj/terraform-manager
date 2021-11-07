@@ -30,5 +30,11 @@ func Load() {
 }
 
 func AddVersionConfig(terraformVersion, binaryLocation string) {
+	Configuration.TerraformVersions = append(Configuration.TerraformVersions, TerraformVersionConfig{
+		Version:    terraformVersion,
+		PathToFile: binaryLocation,
+	})
 
+	data, _ := json.MarshalIndent(Configuration, "", " ")
+	_ = ioutil.WriteFile("config.json", data, 0644)
 }
