@@ -70,7 +70,7 @@ func downloadTerraformVersion(version string) (string, error) {
 		return "", err
 	}
 
-	if err := os.Rename(exeDest+"/terraform", exeDest+"/terraform"+version); err != nil {
+	if err := os.Rename(exeDest+"/terraformtmp", exeDest+"/terraform"+version); err != nil {
 		return "", err
 	}
 
