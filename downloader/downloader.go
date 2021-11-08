@@ -28,7 +28,8 @@ func (wc *WriteCounter) Write(progress []byte) (int, error) {
 func (wc *WriteCounter) PrintProgress() {
 	// Clear line and print new download progress
 	fmt.Print("\r")
-	fmt.Printf("Downloading... %s downloaded", humanize.Bytes(wc.Total))
+	// Space on the end required because the last character doesn't always clear properly
+	fmt.Printf("Downloading... %s downloaded ", humanize.Bytes(wc.Total))
 }
 
 func DownloadFile(url string, dest string) error {
