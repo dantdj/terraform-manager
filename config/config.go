@@ -20,7 +20,10 @@ type TerraformVersionConfig struct {
 func Load() {
 	data, err := ioutil.ReadFile("config.json")
 	if err != nil {
-		panic(err)
+		Configuration.TerraformVersions = []TerraformVersionConfig{}
+		Configuration.CurrentVersion = ""
+		data, _ = json.MarshalIndent(Configuration, "", " ")
+		_ = ioutil.WriteFile("config.json", data, 0644)
 	}
 
 	err = json.Unmarshal(data, &Configuration)
