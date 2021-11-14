@@ -16,6 +16,7 @@
 
 # Local development artifacts
 terraform/
+bin/
 config.json
 
 # OSX Things
