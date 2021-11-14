@@ -30,7 +30,6 @@ var useCmd = &cobra.Command{
 
 		err := os.Symlink(pathToBinary, symlinkPath)
 		if err != nil {
-			fmt.Errorf("%s", err)
 			return err
 		}
 
