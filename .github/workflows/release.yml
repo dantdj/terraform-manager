@@ -1,0 +1,119 @@
+on:
+  release:
+    types:
+      - published
+
+name: Build Release
+jobs:
+  release-linux-386:
+    name: release linux/386
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: compile and release
+      uses: ConsulTent/go-release.action@v1.05
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GOARCH: "386"
+        GOOS: linux
+        PROJECT_NAME: terraform-manager
+        EXTRA_FILES: ''
+        CGO_ENABLED: 0
+  release-linux-amd64:
+    name: release linux/amd64
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: compile and release
+      uses: ConsulTent/go-release.action@v1.05
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GOARCH: amd64
+        GOOS: linux
+        PROJECT_NAME: terraform-manager
+        EXTRA_FILES: ''
+        CGO_ENABLED: 0
+  release-linux-arm:
+    name: release linux/arm
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: compile and release
+      uses: ConsulTent/go-release.action@v1.05
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GOARCH: "arm"
+        GOOS: linux
+        PROJECT_NAME: terraform-manager
+        EXTRA_FILES: ''
+        CGO_ENABLED: 0
+  release-linux-arm64:
+    name: release linux/arm64
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: compile and release
+      uses: ConsulTent/go-release.action@v1.05
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GOARCH: arm64
+        GOOS: linux
+        PROJECT_NAME: terraform-manager
+        EXTRA_FILES: ''
+        CGO_ENABLED: 0
+  release-darwin-amd64:
+    name: release darwin/amd64
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: compile and release
+      uses: ConsulTent/go-release.action@v1.05
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GOARCH: amd64
+        GOOS: darwin
+        PROJECT_NAME: terraform-manager
+        EXTRA_FILES: ''
+        CGO_ENABLED: 0
+  release-darwin-arm64:
+    name: release darwin/arm64
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: compile and release
+      uses: ConsulTent/go-release.action@v1.05
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GOARCH: arm64
+        GOOS: darwin
+        PROJECT_NAME: terraform-manager
+        EXTRA_FILES: ''
+        CGO_ENABLED: 0
+  release-windows-386:
+    name: release windows/386
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: compile and release
+      uses: ConsulTent/go-release.action@v1.05
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GOARCH: "386"
+        GOOS: windows
+        PROJECT_NAME: terraform-manager
+        EXTRA_FILES: ''
+        CGO_ENABLED: 0
+  release-windows-amd64:
+    name: release windows/amd64
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: compile and release
+      uses: ConsulTent/go-release.action@v1.05
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GOARCH: amd64
+        GOOS: windows
+        PROJECT_NAME: terraform-manager
+        EXTRA_FILES: ''
+        CGO_ENABLED: 0
