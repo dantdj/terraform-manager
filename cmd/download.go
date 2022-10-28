@@ -37,8 +37,7 @@ var downloadCmd = &cobra.Command{
 
 func downloadTerraformVersion(version string) (string, error) {
 	zipDest := fmt.Sprintf("terraform_%s_%s_%s.zip", version, runtime.GOOS, runtime.GOARCH)
-	exeDest := "terraform"
-	finalPath := fmt.Sprintf("terraform/%s", version)
+	exeDest := fmt.Sprintf("terraform/%s", version)
 	shaDest := "shasums.txt"
 
 	url := fmt.Sprintf(
@@ -73,10 +72,6 @@ func downloadTerraformVersion(version string) (string, error) {
 		return "", err
 	}
 
-	if err := os.Rename(exeDest+"/terraformtmp", exeDest+"/"+version); err != nil {
-		return "", err
-	}
-
 	if err := os.Remove(zipDest); err != nil {
 		return "", err
 	}
@@ -85,7 +80,7 @@ func downloadTerraformVersion(version string) (string, error) {
 		return "", err
 	}
 
-	return finalPath, nil
+	return exeDest, nil
 }
 
 func getExpectedHash(shaListFilepath, zipPath string) (string, error) {

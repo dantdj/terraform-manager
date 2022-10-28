@@ -19,7 +19,6 @@ var useCmd = &cobra.Command{
 	Short: "Sets the default Terraform version to use",
 	Long:  "Sets the default Terraform version to use",
 	PreRun: func(cmd *cobra.Command, args []string) {
-		fmt.Println("running prerun...")
 		config.InitializeConfig()
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {

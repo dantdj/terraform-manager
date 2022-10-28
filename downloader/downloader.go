@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/dustin/go-humanize"
 )
@@ -63,12 +62,7 @@ func UnzipFile(source, dest string) error {
 	defer reader.Close()
 
 	for _, file := range reader.File {
-		destPath := filepath.Join(dest, file.Name+"tmp")
-
-		// Protects against ZipSlip - https://snyk.io/research/zip-slip-vulnerability
-		if !strings.HasPrefix(destPath, filepath.Clean(dest)+string(os.PathSeparator)) {
-			return fmt.Errorf("%s: illegal file path", destPath)
-		}
+		destPath := dest
 
 		if file.FileInfo().IsDir() {
 			os.MkdirAll(destPath, os.ModePerm)
