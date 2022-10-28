@@ -63,7 +63,7 @@ func downloadTerraformVersion(version string) (string, error) {
 		return "", err
 	}
 	if !valid {
-		return "", fmt.Errorf("Hash for downloaded file did not match the expected hash")
+		return "", fmt.Errorf("hash for downloaded file did not match the expected hash")
 	}
 
 	if err := downloader.UnzipFile(zipDest, exeDest); err != nil {

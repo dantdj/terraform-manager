@@ -17,6 +17,7 @@ var runCmd = &cobra.Command{
 	Short: "Runs the specified command in Terraform",
 	Long:  "Runs the specified command in Terraform",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		// TODO: Change this to use the actual version defined in config
 		version := "1.0.9"
 		app := "terraform/terraform" + version
 

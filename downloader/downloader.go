@@ -37,24 +37,20 @@ func DownloadFile(url string, dest string) error {
 	if err != nil {
 		return err
 	}
+	defer out.Close()
 
 	response, err := http.Get(url)
 	if err != nil {
-		out.Close()
 		return err
 	}
 	defer response.Body.Close()
 
 	counter := &WriteCounter{}
 	if _, err = io.Copy(out, io.TeeReader(response.Body, counter)); err != nil {
-		out.Close()
 		return err
 	}
-
 	// Print newline once download finishes to move off the download line
 	fmt.Print("\n")
-
-	out.Close()
 
 	return nil
 }
@@ -88,17 +84,17 @@ func UnzipFile(source, dest string) error {
 			return err
 		}
 
-		rc, err := file.Open()
+		contents, err := file.Open()
 		if err != nil {
 			return err
 		}
 
-		_, err = io.Copy(outFile, rc)
+		_, err = io.Copy(outFile, contents)
 
 		// Close before next iteration of loop - deferring would only close at
 		// end of function
 		outFile.Close()
-		rc.Close()
+		contents.Close()
 
 		if err != nil {
 			return err
@@ -114,7 +110,7 @@ func ValidateFileHash(filepath, expectedHash string) (bool, error) {
 		return false, err
 	}
 
-	return hash == expectedHash, nil
+	return hash == expectedHash, err
 }
 
 func generateFileHash(filepath string) (string, error) {

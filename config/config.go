@@ -17,9 +17,21 @@ type TerraformVersionConfig struct {
 	PathToFile string `json:"pathToFile"`
 }
 
+func InitializeConfig() {
+	_, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		// If we failed to open the file, create a new default one
+		Configuration.TerraformVersions = []TerraformVersionConfig{}
+		Configuration.CurrentVersion = ""
+		data, _ := json.MarshalIndent(Configuration, "", " ")
+		_ = ioutil.WriteFile("config.json", data, 0644)
+	}
+}
+
 func Load() {
 	data, err := ioutil.ReadFile("config.json")
 	if err != nil {
+		// If we failed to open the file, create a new default one
 		Configuration.TerraformVersions = []TerraformVersionConfig{}
 		Configuration.CurrentVersion = ""
 		data, _ = json.MarshalIndent(Configuration, "", " ")
@@ -39,12 +51,18 @@ func AddVersionConfig(terraformVersion, binaryLocation string) {
 	})
 
 	data, _ := json.MarshalIndent(Configuration, "", " ")
-	_ = ioutil.WriteFile("config.json", data, 0644)
+	err := ioutil.WriteFile("config.json", data, 0644)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func UpdateCurrentVersion(terraformVersion string) {
 	Configuration.CurrentVersion = terraformVersion
 
 	data, _ := json.MarshalIndent(Configuration, "", " ")
-	_ = ioutil.WriteFile("config.json", data, 0644)
+	err := ioutil.WriteFile("config.json", data, 0644)
+	if err != nil {
+		panic(err)
+	}
 }
