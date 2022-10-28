@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 
+	"github.com/dantdj/terraform-manager/config"
 	"github.com/spf13/cobra"
 )
 
@@ -16,12 +17,16 @@ var runCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Short: "Runs the specified command in Terraform",
 	Long:  "Runs the specified command in Terraform",
+	PreRun: func(cmd *cobra.Command, args []string) {
+		config.InitializeConfig()
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// TODO: Change this to use the actual version defined in config
-		version := "1.0.9"
-		app := "terraform/terraform" + version
+		versionConfig, err := config.GetCurrentVersion()
+		if err != nil {
+			return err
+		}
 
-		command := exec.Command(app, args...)
+		command := exec.Command(versionConfig.PathToFile, args...)
 		stdout, err := command.Output()
 
 		if err != nil {

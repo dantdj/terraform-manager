@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"regexp"
 
 	"github.com/dantdj/terraform-manager/config"
 	"github.com/spf13/cobra"
@@ -17,9 +18,13 @@ var useCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Short: "Sets the default Terraform version to use",
 	Long:  "Sets the default Terraform version to use",
+	PreRun: func(cmd *cobra.Command, args []string) {
+		fmt.Println("running prerun...")
+		config.InitializeConfig()
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cwd, _ := os.Getwd()
-		pathToBinary := cwd + fmt.Sprintf("/terraform/terraform%s", args[0])
+		pathToBinary := cwd + fmt.Sprintf("/terraform/%s", args[0])
 		symlinkPath := cwd + "/terraform/terraform"
 
 		if _, err := os.Lstat(symlinkPath); err == nil {
@@ -34,10 +39,18 @@ var useCmd = &cobra.Command{
 		}
 
 		// TODO: Add validation that this is a version string
-		config.UpdateCurrentVersion(args[0])
-
-		fmt.Printf("Set to use version %s\n", args[0])
+		if isValidVersion(args[0]) {
+			config.UpdateCurrentVersion(args[0])
+			fmt.Printf("Set to use version %s\n", args[0])
+		} else {
+			return fmt.Errorf("invalid version string provided: %s", args[0])
+		}
 
 		return nil
 	},
+}
+
+func isValidVersion(version string) bool {
+	match, _ := regexp.MatchString("^\\d*\\.\\d*\\.\\d*$", version)
+	return match
 }

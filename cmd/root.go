@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/dantdj/terraform-manager/config"
 	"github.com/spf13/cobra"
 )
 
@@ -12,6 +13,9 @@ var (
 		Use:   "tfm",
 		Short: "A manager for Terraform versions",
 		Long:  `terraform-manager is a CLI that manages Terraform versions.`,
+		PreRun: func(cmd *cobra.Command, args []string) {
+			config.InitializeConfig()
+		},
 	}
 )
 

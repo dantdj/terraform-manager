@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 )
 
@@ -17,18 +18,8 @@ type TerraformVersionConfig struct {
 	PathToFile string `json:"pathToFile"`
 }
 
-func InitializeConfig() {
-	_, err := ioutil.ReadFile("config.json")
-	if err != nil {
-		// If we failed to open the file, create a new default one
-		Configuration.TerraformVersions = []TerraformVersionConfig{}
-		Configuration.CurrentVersion = ""
-		data, _ := json.MarshalIndent(Configuration, "", " ")
-		_ = ioutil.WriteFile("config.json", data, 0644)
-	}
-}
-
-func Load() {
+// Reads the config and returns the data wihin.
+func InitializeConfig() []byte {
 	data, err := ioutil.ReadFile("config.json")
 	if err != nil {
 		// If we failed to open the file, create a new default one
@@ -38,7 +29,13 @@ func Load() {
 		_ = ioutil.WriteFile("config.json", data, 0644)
 	}
 
-	err = json.Unmarshal(data, &Configuration)
+	return data
+}
+
+func Load() {
+	data := InitializeConfig()
+
+	err := json.Unmarshal(data, &Configuration)
 	if err != nil {
 		panic(err)
 	}
@@ -55,6 +52,20 @@ func AddVersionConfig(terraformVersion, binaryLocation string) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func GetCurrentVersion() (TerraformVersionConfig, error) {
+	if Configuration.CurrentVersion == "" {
+		panic(fmt.Errorf("current version is not set"))
+	}
+
+	for _, versionConfig := range Configuration.TerraformVersions {
+		if versionConfig.Version == Configuration.CurrentVersion {
+			return versionConfig, nil
+		}
+	}
+
+	return TerraformVersionConfig{}, fmt.Errorf("the currentVersion field does not match any known version in config")
 }
 
 func UpdateCurrentVersion(terraformVersion string) {

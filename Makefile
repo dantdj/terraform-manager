@@ -31,7 +31,7 @@ linker_flags = '-s -X main.version=${git_description}'
 .PHONY: build/app
 build/app:
 	@echo "Building app..."
-	GOOS=darwin GOARCH=arm64 go build -ldflags=${linker_flags} -o="./bin/darwin_arm64/tfm"
+	GOOS=darwin GOARCH=amd64 go build -ldflags=${linker_flags} -o="./bin/darwin_amd64/tfm"
 
 # ==================================================================================== #
 # QUALITY CONTROL
