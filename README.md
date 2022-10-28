@@ -14,7 +14,7 @@ Optionally, rename the binary as desired.
 
 Run `terraform-manager download <terraform-version>` to get started - this will download the specified version of Terraform, and add it to the application config file.
 
-Downloaded versions of Terraform are put in a sub-directory under the directory containing `terraform-manager` itself, and the config file is created on the same level as `terraform-manager`.
+Downloaded versions of Terraform are put in a sub-directory `terraform` under the directory containing `terraform-manager` itself, and the config file is created on the same level as `terraform-manager`.
 
 # Development
 

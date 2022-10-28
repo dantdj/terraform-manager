@@ -6,9 +6,6 @@ import (
 )
 
 var (
-	// Used for flags.
-	cfgFile string
-
 	rootCmd = &cobra.Command{
 		Use:   "tfm",
 		Short: "A manager for Terraform versions",
