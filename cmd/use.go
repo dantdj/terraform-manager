@@ -33,6 +33,7 @@ var useCmd = &cobra.Command{
 			return err
 		}
 
+		// TODO: Add validation that this is a version string
 		config.UpdateCurrentVersion(args[0])
 
 		fmt.Printf("Set to use version %s\n", args[0])
