@@ -8,13 +8,13 @@ By default, terraform-manager will download the version of the Terraform for val
 
 Grab the newest release from the [releases page](https://github.com/dantdj/terraform-manager/releases) - make sure to download the relevant archive for your architecture and OS.
 
-Optionally, rename the binary as desired.
+Optionally, rename the binary as desired. If you do so, replace any instance of `terraform-manager` below with what you renamed the binary to be.
 
 ## Usage
 
 Run `terraform-manager download <terraform-version>` to get started - this will download the specified version of Terraform, and add it to the application config file.
 
-Downloaded versions of Terraform are put in a sub-directory `terraform` under the directory containing `terraform-manager` itself, and the config file is created on the same level as `terraform-manager`.
+Files relevant to tfm are stored in the UserCacheDir: https://pkg.go.dev/os#UserCacheDir
 
 # Development
 
