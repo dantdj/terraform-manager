@@ -65,7 +65,7 @@ func downloadTerraformVersion(version string) (string, error) {
 
 	expectedHash, err := getExpectedHash(shaDest, zipDest)
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
 
 	valid, err := downloader.ValidateFileHash(zipDest, expectedHash)
@@ -104,7 +104,6 @@ func getExpectedHash(shaListFilepath, zipPath string) (string, error) {
 	directory, _ := os.UserCacheDir()
 	directory = directory + "/tfm/"
 	zipFileName := strings.Replace(zipPath, directory, "", -1)
-	fmt.Printf("Final zip file name: %s", zipFileName)
 
 	return parsedShaList[zipFileName], nil
 }
