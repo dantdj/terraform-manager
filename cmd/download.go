@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 
 	"github.com/dantdj/terraform-manager/config"
 	"github.com/dantdj/terraform-manager/downloader"
@@ -36,9 +37,13 @@ var downloadCmd = &cobra.Command{
 }
 
 func downloadTerraformVersion(version string) (string, error) {
-	zipDest := fmt.Sprintf("terraform_%s_%s_%s.zip", version, runtime.GOOS, runtime.GOARCH)
-	exeDest := fmt.Sprintf("terraform/%s", version)
-	shaDest := "shasums.txt"
+	// TODO: Handle this error
+	directory, _ := os.UserCacheDir()
+	directory = directory + "/tfm"
+
+	zipDest := fmt.Sprintf("%s/terraform_%s_%s_%s.zip", directory, version, runtime.GOOS, runtime.GOARCH)
+	exeDest := fmt.Sprintf("%s/terraform/%s", directory, version)
+	shaDest := directory + "/shasums.txt"
 
 	url := fmt.Sprintf(
 		"https://releases.hashicorp.com/terraform/%s/terraform_%s_%s_%s.zip",
@@ -58,7 +63,10 @@ func downloadTerraformVersion(version string) (string, error) {
 
 	fmt.Println("")
 
-	expectedHash, _ := getExpectedHash(shaDest, zipDest)
+	expectedHash, err := getExpectedHash(shaDest, zipDest)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	valid, err := downloader.ValidateFileHash(zipDest, expectedHash)
 	if err != nil {
@@ -91,5 +99,12 @@ func getExpectedHash(shaListFilepath, zipPath string) (string, error) {
 	defer file.Close()
 	parsedShaList := parsing.ParseShaList(file)
 
-	return parsedShaList[zipPath], nil
+	// Doing this to remove directory detail - there's better ways of doing this but hacking for now
+	// Should do something like having this be a proper path so I can just grab the filename
+	directory, _ := os.UserCacheDir()
+	directory = directory + "/tfm/"
+	zipFileName := strings.Replace(zipPath, directory, "", -1)
+	fmt.Printf("Final zip file name: %s", zipFileName)
+
+	return parsedShaList[zipFileName], nil
 }

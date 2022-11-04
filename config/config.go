@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 )
 
 var Configuration Config
@@ -20,13 +21,17 @@ type TerraformVersionConfig struct {
 
 // Reads the config and returns the data wihin.
 func InitializeConfig() []byte {
-	data, err := ioutil.ReadFile("config.json")
+	// TODO: Handle this error
+	directory, _ := os.UserCacheDir()
+	directory = directory + "/tfm"
+	os.MkdirAll(directory, os.ModePerm)
+	data, err := ioutil.ReadFile(directory + "/config.json")
 	if err != nil {
 		// If we failed to open the file, create a new default one
 		Configuration.TerraformVersions = []TerraformVersionConfig{}
 		Configuration.CurrentVersion = ""
 		data, _ = json.MarshalIndent(Configuration, "", " ")
-		_ = ioutil.WriteFile("config.json", data, 0644)
+		_ = ioutil.WriteFile(directory+"/config.json", data, 0644)
 	}
 
 	return data
@@ -48,7 +53,11 @@ func AddVersionConfig(terraformVersion, binaryLocation string) {
 	})
 
 	data, _ := json.MarshalIndent(Configuration, "", " ")
-	err := ioutil.WriteFile("config.json", data, 0644)
+	// TODO: Handle this error
+	directory, _ := os.UserCacheDir()
+	directory = directory + "/tfm"
+
+	err := ioutil.WriteFile(directory+"/config.json", data, 0644)
 	if err != nil {
 		panic(err)
 	}
@@ -72,7 +81,11 @@ func UpdateCurrentVersion(terraformVersion string) {
 	Configuration.CurrentVersion = terraformVersion
 
 	data, _ := json.MarshalIndent(Configuration, "", " ")
-	err := ioutil.WriteFile("config.json", data, 0644)
+	// TODO: Handle this error
+	directory, _ := os.UserCacheDir()
+	directory = directory + "/tfm"
+
+	err := ioutil.WriteFile(directory+"/config.json", data, 0644)
 	if err != nil {
 		panic(err)
 	}

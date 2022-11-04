@@ -22,9 +22,12 @@ var useCmd = &cobra.Command{
 		config.InitializeConfig()
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		cwd, _ := os.Getwd()
-		pathToBinary := cwd + fmt.Sprintf("/terraform/%s", args[0])
-		symlinkPath := cwd + "/terraform/terraform"
+		// TODO: Handle this error
+		directory, _ := os.UserCacheDir()
+		directory = directory + "/tfm"
+
+		pathToBinary := fmt.Sprintf("%s/terraform/%s", directory, args[0])
+		symlinkPath := directory + "/terraform/terraform"
 
 		if _, err := os.Lstat(symlinkPath); err == nil {
 			if err := os.Remove(symlinkPath); err != nil {

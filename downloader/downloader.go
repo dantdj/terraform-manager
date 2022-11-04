@@ -100,6 +100,9 @@ func UnzipFile(source, dest string) error {
 
 func ValidateFileHash(filepath, expectedHash string) (bool, error) {
 	hash, err := generateFileHash(filepath)
+	fmt.Printf("Expected: %s", expectedHash)
+	fmt.Printf("Actual: %s", hash)
+	fmt.Println(filepath)
 	if err != nil {
 		return false, err
 	}
